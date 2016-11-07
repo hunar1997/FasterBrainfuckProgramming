@@ -18,6 +18,8 @@ sample:   addV(a, b);   adds a and be together and storing the result in b
 
 mulV(from, to);   same as addV but multiply
 
+divV(x, y);	divide x by y and store the result in x (x=x/y)
+
 subV(from, to);   subtracts (from) from (to) and putting the result in (to)
 
 move(from, to);   moves the value from (from) to (to) by resetting the value of (to) to 0 and moving the value of (from) to to and at the end the value of (from) will be 0
