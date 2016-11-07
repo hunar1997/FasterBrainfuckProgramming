@@ -1,6 +1,8 @@
-// rules
-// Variable must be stored in int
-// Only works with positive numbers
+/* rules
+ * Variable must be stored in int
+ * Only works with positive numbers
+*/
+
 #include <stdio.h>
 
 #define tapeSize 30000
@@ -220,6 +222,80 @@ void mulV(int from, int to){
 	}
 }
 
+void divV(int x, int y){
+	if(!available[x] && !available[y]){
+		int temp0 = newVariable();
+		int temp1 = newVariable();
+		int temp2 = newVariable();
+		int temp3 = newVariable();
+
+		movePointer(x);
+		printf("[");
+		movePointer(temp0);
+		printf("+");
+		movePointer(x);
+		printf("-]");
+		movePointer(temp0);
+		printf("[");
+		movePointer(y);
+		printf("[");
+		movePointer(temp1);
+		printf("+");
+		movePointer(temp2);
+		printf("+");
+		movePointer(y);
+		printf("-]");
+		movePointer(temp2);
+		printf("[");
+		movePointer(y);
+		printf("+");
+		movePointer(temp2);
+		printf("-]");
+		movePointer(temp1);
+		printf("[");
+		movePointer(temp2);
+		printf("+");
+		movePointer(temp0);
+		printf("-[");
+		movePointer(temp2);
+		printf("[-]");
+		movePointer(temp3);
+		printf("+");
+		movePointer(temp0);
+		printf("-]");
+		movePointer(temp3);
+		printf("[");
+		movePointer(temp0);
+		printf("+");
+		movePointer(temp3);
+		printf("-]");
+		movePointer(temp2);
+		printf("[");
+		movePointer(temp1);
+		printf("-");
+		printf("[");
+		movePointer(x);
+		printf("-");
+		movePointer(temp1);
+		printf("[-]]+");
+		movePointer(temp2);
+		printf("-]");
+		movePointer(temp1);
+		printf("-]");
+		movePointer(x);
+		printf("+");
+		movePointer(temp0);
+		printf("]");
+
+		available[temp0]=true;
+		available[temp1]=true;
+		available[temp2]=true;
+		available[temp3]=true;
+	}else{
+		printf("one or both inputs were not variables");
+	}
+}
+
 void swap(int x, int y){
 	if(!available[x] && !available[y]){
 		int temp = newVariable();
@@ -266,13 +342,15 @@ void printC(char c){ // print a character (any ASCII) character in ' '
 }
 
 int main(){
-	setup();
+	setup();	// setting up some important things
 	// Your code starts here
-	printC('H');
-	printC('i');
-	int a = newVariable(3);
+    printC('8');
+    printC('/');
+    printC('4');
+    printC('=');
+	int a = newVariable(8);
 	int b = newVariable(2);
-	mulV(a, b);
+	divV(a, b);
 	addN(b, 48);
 	printV(b);
 	// and ends here
