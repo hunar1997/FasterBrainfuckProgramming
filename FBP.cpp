@@ -3,9 +3,12 @@
  * Only works with positive numbers
 */
 
-#include <stdio.h>
+#include <iostream>
 
 #define tapeSize 30000
+
+using namespace std;
+
 // header stuff ends here
 
 bool available[tapeSize];
@@ -19,63 +22,63 @@ void setup(){
 void movePointer(int location){ // moves the pointer to #location
 	if(location>pointer)
 		for(int i=pointer;i<location;i++){
-	    	printf(">");
+	    	cout << ">";
 	    	pointer++;
 	    }
 	else if(location<pointer)
 		for(int i=pointer;i>location;i--){
-	    	printf("<");
+	    	cout << "<";
 	    	pointer--;
 	    }
 	if(pointer>tapeSize||pointer<0)
-		printf("Error, illigal tape position");
+		cout << "Error, illigal tape position";
 }
 
 int wereToGo(){ // returns an empty location
 	for(int i=0 ; i<tapeSize ; i++)
 		if(available[i]) return i;
-	
-	printf("This error should never occur, it means that we used every location on the tape\n");
+
+	cout << "This error should never occur, it means that we used every location on the tape\n";
 	return false;
 }
 
 void resetVariable(int location){ // reset variable to 0 but not depet it
 	movePointer(location);
-	printf("[-]");
+	cout << "[-]";
 }
 
 
 void move(int from, int to){
 	resetVariable(to);
 	movePointer(from);
-	printf("[-");
+	cout << "[-";
 	movePointer(to);
-	printf("+");
+	cout << "+";
 	movePointer(from);
-	printf("]");
+	cout << "]";
 }
 
 void copy(int from, int to){
 	int temp = wereToGo();
 	available[temp]=false;
-	
+
 	movePointer(to);
-	printf("[-]");
+	cout << "[-]";
 	movePointer(from);
-	printf("[");
+	cout << "[";
 	movePointer(to);
-	printf("+");
+	cout << "+";
 	movePointer(temp);
-	printf("+");
+	cout << "+";
 	movePointer(from);
-	printf("-]");
+	cout << "-]";
 	movePointer(temp);
-	printf("[");
+	cout << "[";
 	movePointer(from);
-	printf("+");
+	cout << "+";
 	movePointer(temp);
-	printf("-]");
-	
+	cout << "-]";
+
 	available[temp]=true;
 }
 
@@ -83,7 +86,7 @@ void addN(int location, short number){ // add a value to a variable
 	movePointer(location);
 	if(number<15){
 		for(int i=0 ; i<number ; i++)
-			printf("+");
+			cout << "+";
 	}else{
 		int n1=500;
 		int n2=500;
@@ -105,19 +108,19 @@ void addN(int location, short number){ // add a value to a variable
 		int temp1=wereToGo();
 		available[temp1]=false;
 		movePointer(temp1);
-		for(;n1>0;n1--) printf("+");
-		printf("[");
+		for(;n1>0;n1--) cout << "+";
+		cout << "[";
 		movePointer(location);
-		for(;n2>0;n2--) printf("+");
+		for(;n2>0;n2--) cout << "+";
 		movePointer(temp1);
-		printf("-]");
+		cout << "-]";
 		if(tt!=0){
 			movePointer(location);
-			if(tt==1) printf("+");
-			else if(tt==-1) printf("-");
+			if(tt==1) cout << "+";
+			else if(tt==-1) cout << "-";
 		}
-		
-		if(n1==500||n2==500) printf("i hope i dont see this error");
+
+		if(n1==500||n2==500) cout << "i hope i dont see this error";
 		available[temp1]=true;
 	}
 }
@@ -138,50 +141,50 @@ int newVariable(int number){ // same as above but it'll also assign it to #numbe
 void addV(int from, int to){
 	if(!available[from] && !available[to]){
 		int temp = newVariable();
-		
+
 		movePointer(from);
-		printf("[");
+		cout << "[";
 		movePointer(to);
-		printf("+");
+		cout << "+";
 		movePointer(temp);
-		printf("+");
+		cout << "+";
 		movePointer(from);
-		printf("-]");
+		cout << "-]";
 		movePointer(temp);
-		printf("[");
+		cout << "[";
 		movePointer(from);
-		printf("+");
+		cout << "+";
 		movePointer(temp);
-		printf("-]");
-		
+		cout << "-]";
+
 		available[temp]=true; // delete variable, no need to reset
 	}else{
-		printf("one or both inputs were not variables");
+		cout << "one or both inputs were not variables";
 	}
 }
 
 void subV(int from, int to){
 	if(!available[from] && !available[to]){
 		int temp = newVariable();
-		
+
 		movePointer(from);
-		printf("[");
+		cout << "[";
 		movePointer(to);
-		printf("-");
+		cout << "-";
 		movePointer(temp);
-		printf("+");
+		cout << "+";
 		movePointer(from);
-		printf("-]");
+		cout << "-]";
 		movePointer(temp);
-		printf("[");
+		cout << "[";
 		movePointer(from);
-		printf("+");
+		cout << "+";
 		movePointer(temp);
-		printf("-]");
-		
+		cout << "-]";
+
 		available[temp]=true; // delete variable, no need to reset
 	}else{
-		printf("one or both inputs were not variables");
+		cout << "one or both inputs were not variables";
 	}
 }
 
@@ -189,36 +192,36 @@ void mulV(int from, int to){
 	if(!available[from] && !available[to]){
 		int temp = newVariable();
 		int temp1 = newVariable();
-		
+
 		movePointer(to);
-		printf("[");
+		cout << "[";
 		movePointer(temp1);
-		printf("+");
+		cout << "+";
 		movePointer(to);
-		printf("-]");
+		cout << "-]";
 		movePointer(temp1);
-		printf("[");
+		cout << "[";
 		movePointer(from);
-		printf("[");
+		cout << "[";
 		movePointer(to);
-		printf("+");
+		cout << "+";
 		movePointer(temp);
-		printf("+");
+		cout << "+";
 		movePointer(from);
-		printf("-]");
+		cout << "-]";
 		movePointer(temp);
-		printf("[");
+		cout << "[";
 		movePointer(from);
-		printf("+");
+		cout << "+";
 		movePointer(temp);
-		printf("-]");
+		cout << "-]";
 		movePointer(temp1);
-		printf("-]");
-		
+		cout << "-]";
+
 		available[temp]=true; // delete variable, no need to reset
 		available[temp1]=true; // delete variable, no need to reset
 	}else{
-		printf("one or both inputs were not variables");
+		cout << "one or both inputs were not variables";
 	}
 }
 
@@ -230,130 +233,176 @@ void divV(int x, int y){
 		int temp3 = newVariable();
 
 		movePointer(x);
-		printf("[");
+		cout << "[";
 		movePointer(temp0);
-		printf("+");
+		cout << "+";
 		movePointer(x);
-		printf("-]");
+		cout << "-]";
 		movePointer(temp0);
-		printf("[");
+		cout << "[";
 		movePointer(y);
-		printf("[");
+		cout << "[";
 		movePointer(temp1);
-		printf("+");
+		cout << "+";
 		movePointer(temp2);
-		printf("+");
+		cout << "+";
 		movePointer(y);
-		printf("-]");
+		cout << "-]";
 		movePointer(temp2);
-		printf("[");
+		cout << "[";
 		movePointer(y);
-		printf("+");
+		cout << "+";
 		movePointer(temp2);
-		printf("-]");
+		cout << "-]";
 		movePointer(temp1);
-		printf("[");
+		cout << "[";
 		movePointer(temp2);
-		printf("+");
+		cout << "+";
 		movePointer(temp0);
-		printf("-[");
+		cout << "-[";
 		movePointer(temp2);
-		printf("[-]");
+		cout << "[-]";
 		movePointer(temp3);
-		printf("+");
+		cout << "+";
 		movePointer(temp0);
-		printf("-]");
+		cout << "-]";
 		movePointer(temp3);
-		printf("[");
+		cout << "[";
 		movePointer(temp0);
-		printf("+");
+		cout << "+";
 		movePointer(temp3);
-		printf("-]");
+		cout << "-]";
 		movePointer(temp2);
-		printf("[");
+		cout << "[";
 		movePointer(temp1);
-		printf("-");
-		printf("[");
+		cout << "-";
+		cout << "[";
 		movePointer(x);
-		printf("-");
+		cout << "-";
 		movePointer(temp1);
-		printf("[-]]+");
+		cout << "[-]]+";
 		movePointer(temp2);
-		printf("-]");
+		cout << "-]";
 		movePointer(temp1);
-		printf("-]");
+		cout << "-]";
 		movePointer(x);
-		printf("+");
+		cout << "+";
 		movePointer(temp0);
-		printf("]");
+		cout << "]";
 
 		available[temp0]=true;
 		available[temp1]=true;
 		available[temp2]=true;
 		available[temp3]=true;
 	}else{
-		printf("one or both inputs were not variables");
+		cout << "one or both inputs were not variables";
 	}
 }
 
 void swap(int x, int y){
 	if(!available[x] && !available[y]){
 		int temp = newVariable();
-		
+
 		movePointer(x);
-		printf("[");
+		cout << "[";
 		movePointer(temp);
-		printf("+");
+		cout << "+";
 		movePointer(x);
-		printf("-]");
+		cout << "-]";
 		movePointer(y);
-		printf("[");
+		cout << "[";
 		movePointer(x);
-		printf("+");
+		cout << "+";
 		movePointer(y);
-		printf("-]");
+		cout << "-]";
 		movePointer(temp);
-		printf("[");
+		cout << "[";
 		movePointer(y);
-		printf("+");
+		cout << "+";
 		movePointer(temp);
-		printf("-]");
-		
+		cout << "-]";
+
 		available[temp]=true; // delete variable, no need to reset
 	}else{
-		printf("one or both inputs were not variables");
+		cout << "one or both inputs were not variables";
 	}
 }
 
 void printV(int location){ // print ASCII value
 	movePointer(location);
-	printf(".");
+	cout << ".";
 }
 
 void printC(char c){ // print a character (any ASCII) character in ' '
 	int temp = newVariable();
-	
+
 	addN(temp, c);
 	movePointer(temp);
-	printf(".");
+	cout << ".";
 	resetVariable(temp);
-	
+
 	available[temp]=true;
+}
+
+void printS(string s){ // print a string
+	int tmpVal = s.at(0);
+	int space = newVariable(32);
+	int tmp = newVariable(tmpVal);
+
+	for (int i=0; i<s.size(); i++){
+		if (s.at(i)==32){
+			movePointer(space);
+			cout << ".";
+			continue;
+		}
+		if (tmpVal==s.at(i)){
+			cout << ".";
+		}else if(tmpVal<s.at(i)){
+			int mag = s.at(i)-tmpVal;
+			tmpVal += mag;
+			addN(tmp, mag);
+			movePointer(tmp);
+			cout << ".";
+		}else if(tmpVal>s.at(i)){
+			int mag = tmpVal-s.at(i);
+			int tt = newVariable(mag);
+			tmpVal -= mag;
+
+			subV(tt, tmp);
+			movePointer(tmp);
+			cout << ".";
+
+			// free this variable
+			resetVariable(tt);
+			available[tt]=true;
+		}
+	}
+	resetVariable(tmp);
+	resetVariable(space);
+	available[space]=true;
+	available[tmp]=true;
+}
+
+void analyse(){
+	int ml=0;
+	for (int i=0; i<tapeSize; i++){
+		if (available[i]==false){
+			ml++;
+		}
+	}
+	if (ml>0){
+		cout << endl << "Memory Leak Detected: " << ml << " memories not freed" << endl;
+	}
 }
 
 int main(){
 	setup();	// setting up some important things
 	// Your code starts here
-    printC('8');
-    printC('/');
-    printC('4');
-    printC('=');
-	int a = newVariable(8);
-	int b = newVariable(2);
-	divV(a, b);
-	addN(b, 48);
-	printV(b);
+    printS("Slaw Kurdistan");
+
 	// and ends here
-	
+
+	analyse();
+
 	return 0;
 }
