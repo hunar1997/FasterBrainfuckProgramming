@@ -5,6 +5,12 @@ I made this using c++ but it's very easy to port to other languages
 
 There is only one important file (FBP.cpp) .. you write your programmes at the bottom between the two comments in the main function and when you finish you compile it and the brainfuck code will be outputed.
 
+The sources i used:
+
+Brainfuck Algorithms: https://esolangs.org/wiki/Brainfuck_algorithms#Divmod_algorithm
+
+Brainfuck Visualizer: https://fatiherikli.github.io/brainfuck-visualizer/
+
 The availale commands are here:
 
 newVariable();  it will make a new variable and return an integer .. it takes an optional imput as the first value of the variable otherwise it'll have the value of 0
@@ -44,3 +50,4 @@ wereToGo();   returns an integer containing the tape location that is not used b
 analyse();	shows error with the number of memory leaks in your code (for the compiler develover :D)
 
 made by HUNAR OMAR in KURDISTAN
+
