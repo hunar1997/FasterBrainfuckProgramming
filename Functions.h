@@ -1,5 +1,6 @@
 // Includes
 #include <iostream>
+#include <cmath>
 // Includes
 
 // Namespaces
@@ -93,17 +94,21 @@ void copy(int from, int to) {
     free(temp);
 }
 
-void addN(int location, short number) { // add a value to a variable
-    movePointer(location);
-    if (number < 15) {
-        for (int i = 0; i < number; i++)
-            cout << "+";
+void addN(int location, int number) { // add a value to a variable
+    if (number==0) return;
+    int absNumber = abs(number);
+    if (absNumber < 15) {
+        movePointer(location);
+        for (int i = 0; i < absNumber; i++){
+            if (number>0) cout << "+";
+            if (number<0) cout << "-";
+        }
     } else {
         int n1 = 500;
         int n2 = 500;
-        for (int i = 1; i < number; i++) {
-            for (int j = 1; j < number; j++) {
-                if (i * j == number || i * j == number - 1 || i * j == number + 1) {
+        for (int i = 1; i < absNumber; i++) {
+            for (int j = 1; j < absNumber; j++) {
+                if (i * j == absNumber || i * j == absNumber - 1 || i * j == absNumber + 1) {
                     if (i + j < n1 + n2) {
                         n1 = i;
                         n2 = j;
@@ -112,17 +117,18 @@ void addN(int location, short number) { // add a value to a variable
             }
         }
         short tt = 0;
-        if (n1 * n2 != number) {
-            if (n1 * n2 == number + 1) tt = -1;
-            if (n1 * n2 == number - 1) tt = 1;
+        if (n1 * n2 != absNumber) {
+            if (n1 * n2 == absNumber + 1) tt = -1;
+            if (n1 * n2 == absNumber - 1) tt = 1;
         }
         int temp1 = wereToGo();
         use(temp1);
         movePointer(temp1);
+        
         for (; n1 > 0; n1--) cout << "+";
         cout << "[";
         movePointer(location);
-        for (; n2 > 0; n2--) cout << "+";
+        for (; n2 > 0; n2--) if (number>0) cout << "+"; else cout << "-";
         movePointer(temp1);
         cout << "-]";
         if (tt != 0) {
@@ -134,6 +140,10 @@ void addN(int location, short number) { // add a value to a variable
         if (n1 == 500 || n2 == 500) cout << "\nErro: I hope i dont see this error\n";
         free(temp1);
     }
+}
+
+void subN(int location, int number) { // subtract a value from a variable
+    addN(location, -number);
 }
 
 int newVariable() { // returns a new available position and makes it unavailable to prevent overwrite
