@@ -20,35 +20,47 @@ int pointer = 0; // Pointer pointing to the current memory location
 
 void setup_the_memory() {
     for (int i = 0; i < tapeSize; i++) {
-        available[i] = true;
+        available[i] = true; // make every single memory byte available
     }
 }
 
 void movePointer(int location) { // moves the pointer to #location
     if (location > pointer)
-        for (int i = pointer; i < location; i++) {
+        for (int i = pointer; i < location; i++) { // if i need to go forward
             cout << ">";
             pointer++;
         } else if (location < pointer)
-        for (int i = pointer; i > location; i--) {
+        for (int i = pointer; i > location; i--) { // if i need to go backward
             cout << "<";
             pointer--;
         }
-    if (pointer > tapeSize || pointer < 0)
-        cout << "Error, illigal tape position";
+    if (pointer > tapeSize || pointer < 0) { // if we exceeded the memory boundaries
+        cout << "\nError: Wrong tape position\n";
+    }
 }
 
 int wereToGo() { // returns an empty location
-    for (int i = 0; i < tapeSize; i++)
-        if (available[i]) return i;
+    for (int i = 0; i < tapeSize; i++) { // loop forward untill there is an available location
+        if (available[i]) {
+            return i;
+        }
+    }
 
-    cout << "This error should never occur, it means that we used every location on the tape\n";
+    cout << "\nError: This error should never occur, it means that we used every location on the tape\n";
     return false;
 }
 
-void resetVariable(int location) { // reset variable to 0 but not depet it
+void resetVariable(int location) { // reset variable to 0 but not delete it
     movePointer(location);
     cout << "[-]";
+}
+
+void use(int location) {
+    available[location] = false;
+}
+
+void free(int location) {
+    available[location] = true;
 }
 
 void move(int from, int to) {
@@ -63,7 +75,7 @@ void move(int from, int to) {
 
 void copy(int from, int to) {
     int temp = wereToGo();
-    available[temp] = false;
+    use(temp);
 
     movePointer(to);
     cout << "[-]";
@@ -75,14 +87,10 @@ void copy(int from, int to) {
     cout << "+";
     movePointer(from);
     cout << "-]";
-    movePointer(temp);
-    cout << "[";
-    movePointer(from);
-    cout << "+";
-    movePointer(temp);
-    cout << "-]";
 
-    available[temp] = true;
+    move(temp, from);
+
+    free(temp);
 }
 
 void addN(int location, short number) { // add a value to a variable
@@ -109,7 +117,7 @@ void addN(int location, short number) { // add a value to a variable
             if (n1 * n2 == number - 1) tt = 1;
         }
         int temp1 = wereToGo();
-        available[temp1] = false;
+        use(temp1);
         movePointer(temp1);
         for (; n1 > 0; n1--) cout << "+";
         cout << "[";
@@ -123,27 +131,31 @@ void addN(int location, short number) { // add a value to a variable
             else if (tt == -1) cout << "-";
         }
 
-        if (n1 == 500 || n2 == 500) cout << "i hope i dont see this error";
-        available[temp1] = true;
+        if (n1 == 500 || n2 == 500) cout << "\nErro: I hope i dont see this error\n";
+        free(temp1);
     }
 }
 
 int newVariable() { // returns a new available position and makes it unavailable to prevent overwrite
     int place = wereToGo();
-    available[place] = false;
+    use(place);
     return place;
 }
 
 int newVariable(int number) { // same as above but it'll also assign it to #number
     int place = wereToGo();
-    available[place] = false;
+    use(place);
     movePointer(place);
     addN(place, number);
     return place;
 }
 
-void addV(int from, int to) {
-    if (!available[from] && !available[to]) {
+void addV(int from, int to, int store) {
+    if (available[from] || available[to]) {
+        cout << "\nError: one or both inputs were not variables\n";
+        return;
+    }
+    if (store == to) {
         int temp = newVariable();
 
         movePointer(from);
@@ -161,9 +173,31 @@ void addV(int from, int to) {
         movePointer(temp);
         cout << "-]";
 
-        available[temp] = true; // delete variable, no need to reset
+        free(temp);
+    } else if (store == from) {
+
+        int temp = newVariable();
+
+        movePointer(to);
+        cout << "[";
+        movePointer(from);
+        cout << "+";
+        movePointer(temp);
+        cout << "+";
+        movePointer(to);
+        cout << "-]";
+        movePointer(temp);
+        cout << "[";
+        movePointer(to);
+        cout << "+";
+        movePointer(temp);
+        cout << "-]";
+
+        free(temp);
     } else {
-        cout << "one or both inputs were not variables";
+        resetVariable(store);
+        copy(from, store);
+        addV(to, store, store);
     }
 }
 
