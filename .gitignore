@@ -1,3 +1,9 @@
 /FBP/dist/
 /FBP/build/
 FBP/
+
+*.o
+
+\.sconsign\.dblite
+
+bin/

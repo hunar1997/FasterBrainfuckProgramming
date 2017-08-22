@@ -5,6 +5,23 @@
 
 // Namespaces
 using namespace std;
+
+namespace FBP{
+	void move(int from, int to);
+	void copy(int from, int to);
+	void addN(int location, int number);
+	void subN(int location, int number);
+	int newVariable();
+	int newVariable(int number);
+	void addV(int from, int to, int store);
+	void subV(int from, int to);
+	void mulV(int from, int to);
+	void divV(int x, int y);
+	void swap(int x, int y);
+	void printV(int location);
+	void printC(char c);
+	void printS(string s);
+}
 // Namespaces
 
 // Defines
@@ -51,20 +68,26 @@ int wereToGo() { // returns an empty location
     return false;
 }
 
+void use(int location) {
+	available[location] = false;
+}
+
+void free(int location) {
+	available[location] = true;
+}
+
 void resetVariable(int location) { // reset variable to 0 but not delete it
     movePointer(location);
     cout << "[-]";
 }
 
-void use(int location) {
-    available[location] = false;
+void deleteVariable(int location) { // reset variable to 0 and delete it
+	movePointer(location);
+	free(location);
+	cout << "[-]";
 }
 
-void free(int location) {
-    available[location] = true;
-}
-
-void move(int from, int to) {
+void FBP::move(int from, int to) {
     resetVariable(to);
     movePointer(from);
     cout << "[-";
@@ -74,7 +97,7 @@ void move(int from, int to) {
     cout << "]";
 }
 
-void copy(int from, int to) {
+void FBP::copy(int from, int to) {
     int temp = wereToGo();
     use(temp);
 
@@ -94,7 +117,7 @@ void copy(int from, int to) {
     free(temp);
 }
 
-void addN(int location, int number) { // add a value to a variable
+void FBP::addN(int location, int number) { // add a value to a variable
     if (number==0) return;
     int absNumber = abs(number);
     if (absNumber < 15) {
@@ -142,17 +165,17 @@ void addN(int location, int number) { // add a value to a variable
     }
 }
 
-void subN(int location, int number) { // subtract a value from a variable
+void FBP::subN(int location, int number) { // subtract a value from a variable
     addN(location, -number);
 }
 
-int newVariable() { // returns a new available position and makes it unavailable to prevent overwrite
+int FBP::newVariable() { // returns a new available position and makes it unavailable to prevent overwrite
     int place = wereToGo();
     use(place);
     return place;
 }
 
-int newVariable(int number) { // same as above but it'll also assign it to #number
+int FBP::newVariable(int number) { // same as above but it'll also assign it to #number
     int place = wereToGo();
     use(place);
     movePointer(place);
@@ -160,13 +183,13 @@ int newVariable(int number) { // same as above but it'll also assign it to #numb
     return place;
 }
 
-void addV(int from, int to, int store) {
+void FBP::addV(int from, int to, int store) {
     if (available[from] || available[to]) {
         cout << "\nError: one or both inputs were not variables\n";
         return;
     }
     if (store == to) {
-        int temp = newVariable();
+		int temp = FBP::newVariable();
 
         movePointer(from);
         cout << "[";
@@ -211,7 +234,7 @@ void addV(int from, int to, int store) {
     }
 }
 
-void subV(int from, int to) {
+void FBP::subV(int from, int to) {
     if (!available[from] && !available[to]) {
         int temp = newVariable();
 
@@ -230,13 +253,13 @@ void subV(int from, int to) {
         movePointer(temp);
         cout << "-]";
 
-        available[temp] = true; // delete variable, no need to reset
+        available[temp] = true; // delete variable, no need to reset		it's already zero .. i should optimize that by adding isZero array
     } else {
         cout << "one or both inputs were not variables";
     }
 }
 
-void mulV(int from, int to) {
+void FBP::mulV(int from, int to) {
     if (!available[from] && !available[to]) {
         int temp = newVariable();
         int temp1 = newVariable();
@@ -265,15 +288,16 @@ void mulV(int from, int to) {
         cout << "-]";
         movePointer(temp1);
         cout << "-]";
-
-        available[temp] = true; // delete variable, no need to reset
-        available[temp1] = true; // delete variable, no need to reset
+	
+		
+        free(temp); // delete variable, no need to reset
+        free(temp1); // delete variable, no need to reset
     } else {
         cout << "one or both inputs were not variables";
     }
 }
 
-void divV(int x, int y) {
+void FBP::divV(int x, int y) {
     if (!available[x] && !available[y]) {
         int temp0 = newVariable();
         int temp1 = newVariable();
@@ -337,17 +361,17 @@ void divV(int x, int y) {
         cout << "+";
         movePointer(temp0);
         cout << "]";
-
-        available[temp0] = true;
-        available[temp1] = true;
-        available[temp2] = true;
-        available[temp3] = true;
+		
+		free(temp0);
+		free(temp1);
+		free(temp2);
+		free(temp3);
     } else {
         cout << "one or both inputs were not variables";
     }
 }
 
-void swap(int x, int y) {
+void FBP::swap(int x, int y) {
     if (!available[x] && !available[y]) {
         int temp = newVariable();
 
@@ -370,29 +394,32 @@ void swap(int x, int y) {
         movePointer(temp);
         cout << "-]";
 
-        available[temp] = true; // delete variable, no need to reset
+        free(temp); // delete variable, no need to reset
     } else {
         cout << "one or both inputs were not variables";
     }
 }
 
-void printV(int location) { // print ASCII value
+void FBP::printV(int location) { // print value in the variable as ASCII
     movePointer(location);
     cout << ".";
 }
 
-void printC(char c) { // print a character (any ASCII) character in ' '
+void FBP::printC(char c) { // print a character (any ASCII) character in ' '
     int temp = newVariable();
 
     addN(temp, c);
     movePointer(temp);
     cout << ".";
-    resetVariable(temp);
 
-    available[temp] = true;
+	deleteVariable(temp);
 }
 
-void printS(string s) { // print a string
+void FBP::printS(string s) { // print a string
+	if (s.length()==1){
+		printC(s.at(0));
+		return;
+	}
     int tmpVal = s.at(0);
     int space = newVariable(32);
     int tmp = newVariable(tmpVal);
@@ -420,15 +447,12 @@ void printS(string s) { // print a string
             movePointer(tmp);
             cout << ".";
 
-            // free this variable
-            resetVariable(tt);
-            available[tt] = true;
+            // delete this variable
+            deleteVariable(tt);
         }
     }
-    resetVariable(tmp);
-    resetVariable(space);
-    available[space] = true;
-    available[tmp] = true;
+    deleteVariable(tmp);
+	deleteVariable(space);
 }
 
 void analyse() {
@@ -439,7 +463,23 @@ void analyse() {
         }
     }
     if (ml > 0) {
-        cout << endl << "Memory Leak Detected: " << ml << " memories not freed" << endl;
+        cout << endl << "Memory Leak Detected: " << ml << " memory not freed" << endl;
     }
 }
 // The core functions
+
+// Test functions
+// void zero(){
+// 	int temp = newVariable();
+// 	movePointer(temp);
+// 	[-]
+// 	>[-]†
+// 	x<[-]>[†
+// 	temp>-[x+temp+>+]
+// 	x[temp>]
+// 	<[+[x-temp>-<-]x<]
+// 	>
+// 	]
+// 	temp[-]
+// 	>[+]
+// }
