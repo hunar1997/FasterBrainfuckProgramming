@@ -7,7 +7,7 @@ There are only two important files (FBP.cpp and Functions.h) .. you write your p
 
 ## The sources i used
 
-[Brainfuck Algorithms](https://esolangs.org/wiki/Brainfuck_algorithms#Divmod_algorithm/)  
+[Brainfuck Algorithms](https://esolangs.org/wiki/Brainfuck_algorithms/)  
  
 [Brainfuck Visualizer](https://fatiherikli.github.io/brainfuck-visualizer/)  
 
