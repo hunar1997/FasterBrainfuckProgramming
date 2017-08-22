@@ -422,7 +422,8 @@ void FBP::printS(string s) { // print a string
 	int NUMBER = -1;
 	int CAPITAL = -1;
 	int SMALL = -1;
-	int space=32, number=50, capital=80, small=100;
+	int SMALL2 = -1;
+	int space=32, number=50, capital=80, small=100, small2=110;
 	
 	if (s.length()==1){
 		printC(s.at(0));
@@ -435,13 +436,14 @@ void FBP::printS(string s) { // print a string
 		char c = s.at(i);
 		
 		if (SPACE==-1 and c==32){
-			SPACE = newVariable();	// 32
+			SPACE = newVariable();
 		}else if (NUMBER==-1 and c>=48 and c<=57){
-			NUMBER = newVariable();	// 52
+			NUMBER = newVariable();
 		}else if (CAPITAL==-1 and c>=65 and c<=90){
-			CAPITAL = newVariable();	// 77
+			CAPITAL = newVariable();
 		}else if (SMALL==-1 and c>=97 and c<=122){
-			SMALL = newVariable();	// 109
+			SMALL = newVariable();
+			SMALL2 = newVariable();
 		}
 	}
 	
@@ -462,6 +464,8 @@ void FBP::printS(string s) { // print a string
 	if (SMALL != -1){
 		movePointer(SMALL);
 		cout << "++++++++++";
+		movePointer(SMALL2);
+		cout << "+++++++++++";
 	}
 	movePointer(tmp);
 	cout << "-]";
@@ -485,8 +489,13 @@ void FBP::printS(string s) { // print a string
 			chosenOne = &CAPITAL;
 			chosenVal = &capital;
 		}else if (c>=97 and c<=122){
-			chosenOne = &SMALL;
-			chosenVal = &small;
+			if ( abs(c-small) <= abs(c-small2) ){
+				chosenOne = &SMALL;
+				chosenVal = &small;
+			}else{
+				chosenOne = &SMALL2;
+				chosenVal = &small2;
+			}
 		}else{
 			chosenOne = &tmp;
 			chosenVal = &tmpVal;
