@@ -6,8 +6,7 @@ int main() {
     // Setup
 
     // THE CODE GOES HERE
-	
-    FBP::printS("Slaw Kurdistan");
+	FBP::printS("Slaw Kurdistan Chony bashy amsal 2017 sarbaxo abin");
 	
     // THE CODE GOES HERE
 
@@ -27,6 +26,6 @@ int main() {
  = addN now can receive negative numbers
  + added deleteVariable
  ^ made FBP namespace for better coding reference
- 
+ ^ fixed printS essue and did some optimization
  */
 

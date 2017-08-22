@@ -21,6 +21,8 @@ namespace FBP{
 	void printV(int location);
 	void printC(char c);
 	void printS(string s);
+	
+	void test_printS(string s);
 }
 // Namespaces
 
@@ -416,43 +418,107 @@ void FBP::printC(char c) { // print a character (any ASCII) character in ' '
 }
 
 void FBP::printS(string s) { // print a string
+	int SPACE = -1;
+	int NUMBER = -1;
+	int CAPITAL = -1;
+	int SMALL = -1;
+	int space=32, number=50, capital=80, small=100;
+	
 	if (s.length()==1){
 		printC(s.at(0));
 		return;
 	}
-    int tmpVal = s.at(0);
-    int space = newVariable(32);
-    int tmp = newVariable(tmpVal);
-
-    for (int i = 0; i < s.size(); i++) {
-        if (s.at(i) == 32) {
-            movePointer(space);
-            cout << ".";
-            continue;
-        }
-        if (tmpVal == s.at(i)) {
-            cout << ".";
-        } else if (tmpVal < s.at(i)) {
-            int mag = s.at(i) - tmpVal;
-            tmpVal += mag;
-            addN(tmp, mag);
-            movePointer(tmp);
-            cout << ".";
-        } else if (tmpVal > s.at(i)) {
-            int mag = tmpVal - s.at(i);
-            int tt = newVariable(mag);
-            tmpVal -= mag;
-
-            subV(tt, tmp);
-            movePointer(tmp);
-            cout << ".";
-
-            // delete this variable
-            deleteVariable(tt);
-        }
-    }
-    deleteVariable(tmp);
-	deleteVariable(space);
+	
+	int tmp = newVariable();
+	int tmpVal = 0;
+	for (int i=0; i<s.size(); i++){
+		char c = s.at(i);
+		
+		if (SPACE==-1 and c==32){
+			SPACE = newVariable();	// 32
+		}else if (NUMBER==-1 and c>=48 and c<=57){
+			NUMBER = newVariable();	// 52
+		}else if (CAPITAL==-1 and c>=65 and c<=90){
+			CAPITAL = newVariable();	// 77
+		}else if (SMALL==-1 and c>=97 and c<=122){
+			SMALL = newVariable();	// 109
+		}
+	}
+	
+	movePointer(tmp);
+	cout << "++++++++++[";
+	if (SPACE != -1){
+		movePointer(SPACE);
+		cout << "+++";
+	}
+	if (NUMBER != -1){
+		movePointer(NUMBER);
+		cout << "+++++";
+	}
+	if (CAPITAL != -1){
+		movePointer(CAPITAL);
+		cout << "++++++++";
+	}
+	if (SMALL != -1){
+		movePointer(SMALL);
+		cout << "++++++++++";
+	}
+	movePointer(tmp);
+	cout << "-]";
+	if (SPACE != -1){
+		movePointer(SPACE);
+		cout << "++";
+	}
+	
+	for (int i=0; i<s.size(); i++){
+		char c = s.at(i);
+		
+		int *chosenOne=nullptr, *chosenVal=nullptr;
+		
+		if (c==32){
+			chosenOne = &SPACE;
+			chosenVal = &space;
+		}else if (c>=48 and c<=57){
+			chosenOne = &NUMBER;
+			chosenVal = &number;
+		}else if (c>=65 and c<=90){
+			chosenOne = &CAPITAL;
+			chosenVal = &capital;
+		}else if (c>=97 and c<=122){
+			chosenOne = &SMALL;
+			chosenVal = &small;
+		}else{
+			chosenOne = &tmp;
+			chosenVal = &tmpVal;
+		}
+		
+		if (c == *chosenVal){
+			movePointer(*chosenOne);
+			cout << ".";
+		}else if(*chosenVal < c){
+			int mag = c - *chosenVal;
+			*chosenVal += mag;
+			addN(*chosenOne, mag);
+			movePointer(*chosenOne);
+			cout << ".";
+		}else if(*chosenVal > c){
+			int mag = *chosenVal - c;
+			int tt = newVariable(mag);
+			*chosenVal -= mag;
+			
+			subV(tt, *chosenOne);
+			movePointer(*chosenOne);
+			cout << ".";
+			
+			deleteVariable(tt);
+		}
+	}
+	
+	if (SPACE != -1) deleteVariable(SPACE);
+	if (NUMBER != -1) deleteVariable(NUMBER);
+	if (CAPITAL != -1) deleteVariable(CAPITAL);
+	if (SMALL != -1) deleteVariable(SMALL);
+	deleteVariable(tmp);
 }
 
 void analyse() {
@@ -468,18 +534,3 @@ void analyse() {
 }
 // The core functions
 
-// Test functions
-// void zero(){
-// 	int temp = newVariable();
-// 	movePointer(temp);
-// 	[-]
-// 	>[-]†
-// 	x<[-]>[†
-// 	temp>-[x+temp+>+]
-// 	x[temp>]
-// 	<[+[x-temp>-<-]x<]
-// 	>
-// 	]
-// 	temp[-]
-// 	>[+]
-// }
