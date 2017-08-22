@@ -498,19 +498,15 @@ void FBP::printS(string s) { // print a string
 		}else if(*chosenVal < c){
 			int mag = c - *chosenVal;
 			*chosenVal += mag;
-			addN(*chosenOne, mag);
 			movePointer(*chosenOne);
+			for (int z=0; z<mag; z++) cout << "+";
 			cout << ".";
 		}else if(*chosenVal > c){
 			int mag = *chosenVal - c;
-			int tt = newVariable(mag);
 			*chosenVal -= mag;
-			
-			subV(tt, *chosenOne);
 			movePointer(*chosenOne);
+			for (int z=0; z<mag; z++) cout << "-";
 			cout << ".";
-			
-			deleteVariable(tt);
 		}
 	}
 	

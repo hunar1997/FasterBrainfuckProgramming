@@ -16,7 +16,7 @@ There are only two important files (FBP.cpp and Functions.h) .. you write your p
 |Code|Description|Example|
 |------|-----|------|
 |`newVariable();`|it will make a new variable and return an integer .. it takes an optional input as the first value of the variable otherwise it'll have the value of 0 | `int a = newVariable(2);`   makes a new variable called **a** with the value of 2|
-|`addN(location, number);`|adds the **number** to the **location** (location is a variable) .. it should not be a negative number .. it'll automaticaly choose between using ++++ repeatedly or using multiplication to reduce the codes|`addN(a, 10);`    adds 10 to the value of the variable **a**|
+|`addN(location, number);`|adds the **number** to the **location** (location is a variable) .. **now supports negative inputs :D** .. it'll automaticaly choose between using ++++ repeatedly or using multiplication to reduce the codes|`addN(a, 10);`    adds 10 to the value of the variable **a**|
 |`addV(from, to);`|adds two variables together .. the result will be stored in **to** keeping the original value of **from** as it is|`addV(a, b);`   adds **a** and **b** together and storing the result in **b**|
 |`mulV(from, to);`|same as addV but multiply||
 |`divV(x, y);`|divide **x** by **y** and store the result in **x**  so it's like **(x=x/y)**  ||
@@ -28,8 +28,11 @@ There are only two important files (FBP.cpp and Functions.h) .. you write your p
 |`printC(c);`|takes an ASCII character and prints it .. it can be any character 'd', '%', '5', character must be inside **'**||
 |`printS(string);`|takes any ASCII character combinations and prints it, `printS("Hello World");` string must be inside **"**||
 |`resetVariable(location);`|resets the variable to **0**, (without freeing it)||
+|`deleteVariable(location);`|resets the variable to **0**, and frees it||
 |`movePointer(location);`|moves the poiter to **location** variable by using **>** and **<**||
 |`wereToGo();`|returns an integer containing the tape location that is not used by any variable **(AKA available)**||
+|`use(location);`|marks a location on memory as **used**||
+|`free(location);`|marks a location on memory as **free**||
 |`analyse();`|shows error with the number of memory leaks in your code **(for the compiler develover :D)**||
 
 made by HUNAR OMAR in KURDISTAN  

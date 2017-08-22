@@ -6,7 +6,7 @@ int main() {
     // Setup
 
     // THE CODE GOES HERE
-	FBP::printS("Slaw Kurdistan Chony bashy amsal 2017 sarbaxo abin");
+	FBP::printS("This long text can compete with online text to brainfuck converters in both speed and number of code");
 	
     // THE CODE GOES HERE
 
@@ -19,13 +19,7 @@ int main() {
 
 /* TO NOTE
 
- + added #use and #free
- ^ did some optimization
  ? make #isZero array to contain the zero values and prevent [-]
- = Changed addV
- = addN now can receive negative numbers
- + added deleteVariable
- ^ made FBP namespace for better coding reference
- ^ fixed printS essue and did some optimization
+
  */
 
