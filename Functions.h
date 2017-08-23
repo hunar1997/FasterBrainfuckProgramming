@@ -608,6 +608,65 @@ int FBP::NOT_EQUAL(int first_number, int second_number){
 	return result;
 }
 
+int COMPARE(int first_number, int second_number, bool equal){
+	int temp0 = FBP::newVariable();
+	int temp1 = FBP::newVariable();
+	int result = FBP::newVariable();
+	int x = FBP::newVariable();
+	int y = FBP::newVariable();
+	FBP::copy(first_number, x);
+	FBP::copy(second_number, y);
+	movePointer(x);
+	if (equal) cout << "+";
+	cout << "[";
+	movePointer(temp0);
+	cout << "+";
+	movePointer(y);
+	cout << "[-";
+	resetVariable(temp0);
+	movePointer(temp1);
+	cout << "+";
+	movePointer(y);
+	cout << "]";
+	movePointer(temp0);
+	cout << "[-";
+	movePointer(result);
+	cout << "+";
+	movePointer(temp0);
+	cout << "]";
+	movePointer(temp1);
+	cout << "[-";
+	movePointer(y);
+	cout << "+";
+	movePointer(temp1);
+	cout << "]";
+	movePointer(y);
+	cout << "-";
+	movePointer(x);
+	cout << "-]";
+	free(temp0);
+	free(temp1);
+	free(x);
+	deleteVariable(y);
+	return result;
+}
+
+int FBP::GREATER(int first_number, int second_number){
+	return COMPARE(first_number, second_number, false);
+}
+
+int FBP::GREATER_OR_EQUAL(int first_number, int second_number){
+	return COMPARE(first_number, second_number, true);;
+}
+
+int FBP::SMALLER(int first_number, int second_number){
+	return COMPARE(second_number, first_number, false);
+}
+
+int FBP::SMALLER_OR_EQUAL(int first_number, int second_number){
+	return COMPARE(second_number, first_number, true);
+}
+
 void FBP::ifTrue(int condition, bool keep_result){
 	movePointer(condition);
 	cout << "[";

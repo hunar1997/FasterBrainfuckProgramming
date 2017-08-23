@@ -10,8 +10,8 @@ int main() {
 	int a = newVariable(3);
 	int b = newVariable(4);
 	int z = newVariable();
-	ifTrue(NOT_EQUAL(a,b));
-	addN(z, 10);
+	ifTrue(SMALLER_OR_EQUAL(a,b));
+	printS("True");
 	endIf();
 	
     // THE CODE GOES HERE
@@ -23,8 +23,8 @@ int main() {
     return 0;
 }
 
-/* TO NOTE
+/* TO DO
 
- ? make #isZero array to contain the zero values and prevent [-]
+? make #isZero array to contain the zero values and prevent [-]
 
- */
+*/
