@@ -28,12 +28,12 @@ There are only two important files (FBP.cpp and Functions.h) .. you write your p
 |`printC(c);`|takes an ASCII character and prints it .. it can be any character 'd', '%', '5', character must be inside **'**||
 |`printS(string);`|takes any ASCII character combinations and prints it, `printS("Hello World");` string must be inside **"**||
 |`ifTrue(condition);`|used to create **if** statements and takes one **condition**, as discussed next. must be ended with `endIf();`, `ifTrue(SMALLER_OR_EQUAL(a,b));`||
-|`EQUAL(a, b);`|used as input to **if** statements, takes two variables and return true if they are equal, `EQUAL(a,b);` where **a** and **b** were made using `newVariable()`||
-|`NOT_EQUAL(a, b);`|used as input to **if** statements, takes two variables and return true if they are not equal, `NOT_EQUAL(a,b);` where **a** and **b** were made using `newVariable()`||
-|`GREATER(a, b);`|used as input to **if** statements, takes two variables and return true if a is greater than b, `GREATER(a,b);` where **a** and **b** were made using `newVariable()`||
-|`GREATER_OR_EQUAL(a, b);`|used as input to **if** statements, takes two variables and return true if a is greater than or equal to b, `GREATER_OR_EQUAL(a,b);` where **a** and **b** were made using `newVariable()`||
-|`SMALLER(a, b);`|used as input to **if** statements, takes two variables and return true if a is smaller than b, `SMALLER(a,b);` where **a** and **b** were made using `newVariable()`||
-|`SMALLER_OR_EQUAL(a, b);`|used as input to **if** statements, takes two variables and return true if a is smaller than or equal to b, `SMALLER_OR_EQUAL(a,b);` where **a** and **b** were made using `newVariable()`||
+|`EQUAL(a, b);`|used as input to **if** statements, takes two variables and return true if they are equal | `EQUAL(a,b);` where **a** and **b** were made using `newVariable()`|
+|`NOT_EQUAL(a, b);`|used as input to **if** statements, takes two variables and return true if they are not equal | `NOT_EQUAL(a,b);` where **a** and **b** were made using `newVariable()`|
+|`GREATER(a, b);`|used as input to **if** statements, takes two variables and return true if a is greater than b | `GREATER(a,b);` where **a** and **b** were made using `newVariable()`|
+|`GREATER_OR_EQUAL(a, b);`|used as input to **if** statements, takes two variables and return true if a is greater than or equal to b | `GREATER_OR_EQUAL(a,b);` where **a** and **b** were made using `newVariable()`|
+|`SMALLER(a, b);`|used as input to **if** statements, takes two variables and return true if a is smaller than b | `SMALLER(a,b);` where **a** and **b** were made using `newVariable()`|
+|`SMALLER_OR_EQUAL(a, b);`|used as input to **if** statements, takes two variables and return true if a is smaller than or equal to b | `SMALLER_OR_EQUAL(a,b);` where **a** and **b** were made using `newVariable()`|
 |`endIf();`|used to end **if** statements and takes no arguments., `endIf();`
 |`resetVariable(location);`|resets the variable to **0**, (without freeing it)||
 |`deleteVariable(location);`|resets the variable to **0**, and frees it||
