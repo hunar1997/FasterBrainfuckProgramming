@@ -7,3 +7,6 @@ FBP/
 \.sconsign\.dblite
 
 bin/
+SConstruct
+FasterBrainfuckProgramming.kdev4
+\.kdev4/
