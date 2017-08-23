@@ -6,7 +6,13 @@ int main() {
     // Setup
 
     // THE CODE GOES HERE
-	FBP::printS("This long text can compete with online text to brainfuck converters in both speed and number of code");
+	using namespace FBP;
+	int a = newVariable(3);
+	int b = newVariable(4);
+	int z = newVariable();
+	ifTrue(NOT_EQUAL(a,b));
+	addN(z, 10);
+	endIf();
 	
     // THE CODE GOES HERE
 
@@ -22,4 +28,3 @@ int main() {
  ? make #isZero array to contain the zero values and prevent [-]
 
  */
-

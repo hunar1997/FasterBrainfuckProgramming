@@ -7,6 +7,7 @@
 using namespace std;
 
 namespace FBP{
+	
 	void move(int from, int to);
 	void copy(int from, int to);
 	void addN(int location, int number);
@@ -22,7 +23,14 @@ namespace FBP{
 	void printC(char c);
 	void printS(string s);
 	
-	void test_printS(string s);
+	int EQUAL(int first_number, int second_number);
+	int NOT_EQUAL(int first_number, int second_number);
+	int GREATER(int first_number, int second_number);
+	int GREATER_OR_EQUAL(int first_number, int second_number);
+	int SMALLER(int first_number, int second_number);
+	int SMALLER_OR_EQUAL(int first_number, int second_number);
+	void ifTrue(int condition, bool keep_result=false);
+	void endIf();
 }
 // Namespaces
 
@@ -524,6 +532,90 @@ void FBP::printS(string s) { // print a string
 	if (CAPITAL != -1) deleteVariable(CAPITAL);
 	if (SMALL != -1) deleteVariable(SMALL);
 	deleteVariable(tmp);
+}
+
+int FBP::EQUAL(int first_number, int second_number){
+	int result = newVariable();
+	copy(first_number, result);
+	int temp0 = newVariable();
+	int temp1 = newVariable();
+	
+	
+	movePointer(result);
+	cout << "[";
+	movePointer(temp1);
+	cout << "+";
+	movePointer(result);
+	cout << "-]+";
+	movePointer(second_number);
+	cout << "[";
+	movePointer(temp1);
+	cout << "-";
+	movePointer(temp0);
+	cout << "+";
+	movePointer(second_number);
+	cout << "-]";
+	movePointer(temp0);
+	cout << "[";
+	movePointer(second_number);
+	cout << "+";
+	movePointer(temp0);
+	cout << "-]";
+	movePointer(temp1);
+	cout << "[";
+	movePointer(result);
+	cout << "-";
+	deleteVariable(temp1);
+	cout << "]";
+	free(temp0);
+	return result;
+}
+
+int FBP::NOT_EQUAL(int first_number, int second_number){
+	int result = newVariable();
+	copy(first_number, result);
+	int temp0 = newVariable();
+	int temp1 = newVariable();
+	
+	
+	movePointer(result);
+	cout << "[";
+	movePointer(temp1);
+	cout << "+";
+	movePointer(result);
+	cout << "-]";
+	movePointer(second_number);
+	cout << "[";
+	movePointer(temp1);
+	cout << "-";
+	movePointer(temp0);
+	cout << "+";
+	movePointer(second_number);
+	cout << "-]";
+	movePointer(temp0);
+	cout << "[";
+	movePointer(second_number);
+	cout << "+";
+	movePointer(temp0);
+	cout << "-]";
+	movePointer(temp1);
+	cout << "[";
+	movePointer(result);
+	cout << "+";
+	deleteVariable(temp1);
+	cout << "]";
+	free(temp0);
+	return result;
+}
+
+void FBP::ifTrue(int condition, bool keep_result){
+	movePointer(condition);
+	cout << "[";
+	if (!keep_result) deleteVariable(condition);
+}
+void FBP::endIf(){
+	movePointer(wereToGo());
+	cout << "]";
 }
 
 void analyse() {
