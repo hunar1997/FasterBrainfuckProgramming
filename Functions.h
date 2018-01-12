@@ -1,6 +1,7 @@
 // Includes
 #include <iostream>
 #include <cmath>
+#include <vector>
 // Includes
 
 // Namespaces
@@ -30,6 +31,7 @@ namespace FBP{
 	int SMALLER(int first_number, int second_number);
 	int SMALLER_OR_EQUAL(int first_number, int second_number);
 	void ifTrue(int condition, bool keep_result);
+	void elseIf();
 	void endIf();
 }
 // Namespaces
@@ -127,6 +129,12 @@ void FBP::copy(int from, int to) {
     move(temp, from);
 
     free(temp);
+}
+
+int getCopy(int variable){
+	int result = FBP::newVariable();
+	FBP::copy(variable, result);
+	return result;
 }
 
 // add a value to a variable
@@ -256,15 +264,15 @@ void FBP::subV(int from, int to) {
 
         movePointer(from);
         cout << "[";
-        movePointer(to);
+		movePointer(to);
         cout << "-";
         movePointer(temp);
         cout << "+";
-        movePointer(from);
+		movePointer(from);
         cout << "-]";
         movePointer(temp);
         cout << "[";
-        movePointer(from);
+		movePointer(from);
         cout << "+";
         movePointer(temp);
         cout << "-]";
@@ -681,15 +689,58 @@ int FBP::SMALLER_OR_EQUAL(int first_number, int second_number){
 	return COMPARE(second_number, first_number, true);
 }
 
+struct if_data{
+	int temp0;
+	int temp1;
+};
+vector<if_data> if_list;
+
 void FBP::ifTrue(int condition, bool keep_result=false){
+	int temp0 = newVariable();
+	int temp1 = newVariable();
+	
+	if_data this_if;
+	this_if.temp0 = temp0;
+	this_if.temp1 = temp1;
+	if_list.push_back(this_if);
+
 	movePointer(condition);
+	cout << "[";
+	movePointer(temp0);
+	cout << "+";
+	movePointer(temp1);
+	cout << "+";
+	movePointer(condition);
+	cout << "-]";
+	movePointer(temp0);
+	cout << "[";
+	movePointer(condition);
+	cout << "+";
+	movePointer(temp0);
+	cout << "-]+";
+	movePointer(temp1);
 	cout << "[";
 	if (!keep_result)
 		deleteVariable(condition);
 }
+void FBP::elseIf(){
+	int temp0 = if_list.back().temp0;
+	int temp1 = if_list.back().temp1;
+	movePointer(temp0);
+	cout << "-";
+	movePointer(temp1);
+	cout << "[-]]";
+	movePointer(temp0);
+	cout << "[";
+}
 void FBP::endIf(){
-	movePointer(wereToGo());
-	cout << "]";
+	int temp0 = if_list.back().temp0;
+	int temp1 = if_list.back().temp1;
+	movePointer(temp0);
+	cout << "-]";
+	deleteVariable(temp0);
+	deleteVariable(temp1);
+	if_list.pop_back();
 }
 
 void analyse() {

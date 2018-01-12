@@ -7,12 +7,22 @@ int main() {
 
     // THE CODE GOES HERE
 	using namespace FBP;
-	// this is an overkill example since print takes along time
-	int a = newVariable(2); // [bug] when a is bigger it takes a ton of time
-	int b = newVariable(3);
-	cout << "\n";
-	int r = GREATER_OR_EQUAL(a, b);
-	cout << endl << r << endl;
+	int age = newVariable(20);
+	int age1 = newVariable(12);
+	int age2 = newVariable(30);
+	printS("You are ");
+	ifTrue(SMALLER_OR_EQUAL(age, age1));
+		printS("a child.");
+	elseIf();
+	ifTrue(SMALLER_OR_EQUAL(age, age2));
+			printS("young.");
+		elseIf();
+			printS("Old");
+		endIf();
+	endIf();
+	deleteVariable(age);
+	deleteVariable(age1);
+	deleteVariable(age2);
     // THE CODE GOES HERE
 
     // Debug
