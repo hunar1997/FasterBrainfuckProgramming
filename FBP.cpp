@@ -1,22 +1,22 @@
 #include "Functions.h"
 
 int main() {
-    // Setup
+    // Setup (required)
     setup_the_memory();
     // Setup
 
     // THE CODE GOES HERE
 	using namespace FBP;
-	int a = newVariable(3);
-	int b = newVariable(4);
-	int z = newVariable();
-	ifTrue(SMALLER_OR_EQUAL(a,b));
-	printS("True");
-	endIf();
-	
+	// this is an overkill example since print takes along time
+	int a = newVariable(2); // [bug] when a is bigger it takes a ton of time
+	int b = newVariable(3);
+	cout << "\n";
+	int r = GREATER_OR_EQUAL(a, b);
+	cout << endl << r << endl;
     // THE CODE GOES HERE
 
     // Debug
+	// shows number of memory leaks that are not free(); ed
     analyse();
     // Debug
 

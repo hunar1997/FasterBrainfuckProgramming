@@ -29,7 +29,7 @@ namespace FBP{
 	int GREATER_OR_EQUAL(int first_number, int second_number);
 	int SMALLER(int first_number, int second_number);
 	int SMALLER_OR_EQUAL(int first_number, int second_number);
-	void ifTrue(int condition, bool keep_result=false);
+	void ifTrue(int condition, bool keep_result);
 	void endIf();
 }
 // Namespaces
@@ -86,12 +86,14 @@ void free(int location) {
 	available[location] = true;
 }
 
-void resetVariable(int location) { // reset variable to 0 but not delete it
+// reset variable to 0 but not delete it
+void resetVariable(int location) {
     movePointer(location);
     cout << "[-]";
 }
 
-void deleteVariable(int location) { // reset variable to 0 and delete it
+// reset variable to 0 and delete it
+void deleteVariable(int location) {
 	movePointer(location);
 	free(location);
 	cout << "[-]";
@@ -127,7 +129,8 @@ void FBP::copy(int from, int to) {
     free(temp);
 }
 
-void FBP::addN(int location, int number) { // add a value to a variable
+// add a value to a variable
+void FBP::addN(int location, int number) {
     if (number==0) return;
     int absNumber = abs(number);
     if (absNumber < 15) {
@@ -175,17 +178,20 @@ void FBP::addN(int location, int number) { // add a value to a variable
     }
 }
 
-void FBP::subN(int location, int number) { // subtract a value from a variable
+// subtract a value from a variable
+void FBP::subN(int location, int number) {
     addN(location, -number);
 }
 
-int FBP::newVariable() { // returns a new available position and makes it unavailable to prevent overwrite
+// returns a new available position and makes it unavailable to prevent overwrite
+int FBP::newVariable() {
     int place = wereToGo();
     use(place);
     return place;
 }
 
-int FBP::newVariable(int number) { // same as above but it'll also assign it to #number
+// same as above but it'll also assign it to #number
+int FBP::newVariable(int number) {
     int place = wereToGo();
     use(place);
     movePointer(place);
@@ -263,7 +269,8 @@ void FBP::subV(int from, int to) {
         movePointer(temp);
         cout << "-]";
 
-        available[temp] = true; // delete variable, no need to reset		it's already zero .. i should optimize that by adding isZero array
+		// delete variable, no need to reset		it's already zero .. i should optimize that by adding isZero array
+        available[temp] = true;
     } else {
         cout << "one or both inputs were not variables";
     }
@@ -410,12 +417,14 @@ void FBP::swap(int x, int y) {
     }
 }
 
-void FBP::printV(int location) { // print value in the variable as ASCII
+// print value in the variable as ASCII
+void FBP::printV(int location) {
     movePointer(location);
     cout << ".";
 }
 
-void FBP::printC(char c) { // print a character (any ASCII) character in ' '
+// print a character (any ASCII) character in ' '
+void FBP::printC(char c) {
     int temp = newVariable();
 
     addN(temp, c);
@@ -425,7 +434,8 @@ void FBP::printC(char c) { // print a character (any ASCII) character in ' '
 	deleteVariable(temp);
 }
 
-void FBP::printS(string s) { // print a string
+// print a string
+void FBP::printS(string s) {
 	int SPACE = -1;
 	int NUMBER = -1;
 	int CAPITAL = -1;
@@ -530,7 +540,10 @@ void FBP::printS(string s) { // print a string
 	if (SPACE != -1) deleteVariable(SPACE);
 	if (NUMBER != -1) deleteVariable(NUMBER);
 	if (CAPITAL != -1) deleteVariable(CAPITAL);
-	if (SMALL != -1) deleteVariable(SMALL);
+	if (SMALL != -1){
+		deleteVariable(SMALL);
+		deleteVariable(SMALL2);
+	}
 	deleteVariable(tmp);
 }
 
@@ -608,6 +621,7 @@ int FBP::NOT_EQUAL(int first_number, int second_number){
 	return result;
 }
 
+// I forgot what this function does :/
 int COMPARE(int first_number, int second_number, bool equal){
 	int temp0 = FBP::newVariable();
 	int temp1 = FBP::newVariable();
@@ -667,10 +681,11 @@ int FBP::SMALLER_OR_EQUAL(int first_number, int second_number){
 	return COMPARE(second_number, first_number, true);
 }
 
-void FBP::ifTrue(int condition, bool keep_result){
+void FBP::ifTrue(int condition, bool keep_result=false){
 	movePointer(condition);
 	cout << "[";
-	if (!keep_result) deleteVariable(condition);
+	if (!keep_result)
+		deleteVariable(condition);
 }
 void FBP::endIf(){
 	movePointer(wereToGo());
