@@ -1,4 +1,6 @@
 // Includes
+#pragma once
+
 #include <iostream>
 #include <cmath>
 #include <vector>
@@ -11,6 +13,7 @@ namespace FBP{
 	
 	void move(int from, int to);
 	void copy(int from, int to);
+    int getCopy(int variable);
 	void addN(int location, int number);
 	void subN(int location, int number);
 	int newVariable();
@@ -131,7 +134,7 @@ void FBP::copy(int from, int to) {
     free(temp);
 }
 
-int getCopy(int variable){
+int FBP::getCopy(int variable){
 	int result = FBP::newVariable();
 	FBP::copy(variable, result);
 	return result;
@@ -556,8 +559,7 @@ void FBP::printS(string s) {
 }
 
 int FBP::EQUAL(int first_number, int second_number){
-	int result = newVariable();
-	copy(first_number, result);
+	int result = FBP::getCopy(first_number);
 	int temp0 = newVariable();
 	int temp1 = newVariable();
 	
@@ -593,8 +595,7 @@ int FBP::EQUAL(int first_number, int second_number){
 }
 
 int FBP::NOT_EQUAL(int first_number, int second_number){
-	int result = newVariable();
-	copy(first_number, result);
+	int result = getCopy(first_number);
 	int temp0 = newVariable();
 	int temp1 = newVariable();
 	
@@ -634,10 +635,8 @@ int COMPARE(int first_number, int second_number, bool equal){
 	int temp0 = FBP::newVariable();
 	int temp1 = FBP::newVariable();
 	int result = FBP::newVariable();
-	int x = FBP::newVariable();
-	int y = FBP::newVariable();
-	FBP::copy(first_number, x);
-	FBP::copy(second_number, y);
+	int x = FBP::getCopy(first_number);
+	int y = FBP::getCopy(second_number);
 	movePointer(x);
 	if (equal) cout << "+";
 	cout << "[";
