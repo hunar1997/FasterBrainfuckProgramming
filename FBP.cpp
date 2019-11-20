@@ -13,6 +13,7 @@ int main() {
 
     printS("You are ");
     ifTrue(SMALLER_OR_EQUAL(age, age1));
+        printS("a child.");
     elseIf();
     ifTrue(SMALLER_OR_EQUAL(age, age2));
             printS("young.");
@@ -32,10 +33,9 @@ int main() {
 
     return 0;
 }
-// privious program runs in 68093 steps
-// now it takes 6294 steps
+
 /* TO DO
 
  make #isZero array to contain the zero values and prevent [-]
-
+ use a consistent format in naming functions
 */

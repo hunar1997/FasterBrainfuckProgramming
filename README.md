@@ -1,6 +1,6 @@
 # Faster Brainfuck Programming FBP
-# Version 0.1
-This project is to make brainfuck language programming easier, faster and more powerful ..  everything is made out of functions making it very easy to port to other languages 
+# Version 0.2
+This project aims to make programming the brainfuck language easier, faster and more powerful ..  everything is made out of functions making it very easy to port to other languages 
 
 I made this using c++ but i used things that exist in every singe language 
 
@@ -8,13 +8,21 @@ There are only two important files (FBP.cpp and Functions.h) .. you write your p
 
 ## The sources i used
 
-[Brainfuck Algorithms](https://esolangs.org/wiki/Brainfuck_algorithms/)  
+[Brainfuck Algorithms](https://esolangs.org/wiki/Brainfuck_algorithms)
  
 [Brainfuck Visualizer](https://fatiherikli.github.io/brainfuck-visualizer/)  
+[Brainfuck IDE](https://minond.xyz/brainfuck/) 
 
 ## What's new!!
-0.1:   
-- Now you can put nested if-statements
+* 0.2:
+  - Improved the printS function
+  - Added `newArray` function, along with `array` datatype
+  - Used the [new comparison algorithm](https://www.reddit.com/r/brainfuck/comments/d0huag/what_is_the_best_way_to_compare_two_numbers) (by reddit user danielcristofani)
+  - Overall improvements made the number of steps to run the main program (in FBP.cpp) reduce from 68093 to 6533
+  - The new `COMPARE` function creates an array that results in 5 memory leaks (more bugs to fix later)
+
+* 0.1:   
+  - Now you can put nested if-statements
 
 ## The availale commands are here  
 
@@ -36,6 +44,7 @@ There are only two important files (FBP.cpp and Functions.h) .. you write your p
 |`ifTrue(condition);`|used to create **if** statements and takes one **condition**, as discussed next. must be ended with `endIf();` | `ifTrue(SMALLER_OR_EQUAL(a,b));`|  
 |`elseIf();`|codes between this and `endIf();` will be called when ifTrue condition is false.| `elseIf();` |  
 |`endIf();`|used to end **if** statements and takes no arguments. | `endIf();` |
+|`COMPARE(a,b);`|Compares the two input variables and returns a `cmp_result` datatype which has `equal``greator``smaller`| `COMPARE(a,b).greater` returns memory location of greater, its one if a>b |
 |`EQUAL(a, b);`|used as input to **if** statements, takes two variables and return true if they are equal | `EQUAL(a,b);` where **a** and **b** were made using `newVariable()`|
 |`NOT_EQUAL(a, b);`|used as input to **if** statements, takes two variables and return true if they are not equal | `NOT_EQUAL(a,b);` where **a** and **b** were made using `newVariable()`|
 |`GREATER(a, b);`|used as input to **if** statements, takes two variables and return true if a is greater than b | `GREATER(a,b);` where **a** and **b** were made using `newVariable()`|
@@ -45,12 +54,13 @@ There are only two important files (FBP.cpp and Functions.h) .. you write your p
 |`resetVariable(location);`|resets the variable to **0**, (without freeing it)||
 |`deleteVariable(location);`|resets the variable to **0**, and frees it||
 |`movePointer(location);`|moves the poiter to **location** variable by using **>** and **<**||
-|`wereToGo();`|returns an integer containing the tape location that is not used by any variable **(AKA available)**||
+|`newArray();`|Creates a continuous list of variables and `use()`es them, then returns an `array` datatype which has `index` and `size`|`newArray(3)` or `newArray({1,2,3})`|
+|`wereToGo();`|Returns newArray(1).index||
 |`use(location);`|marks a location on memory as **used**||
 |`free(location);`|marks a location on memory as **free**||
 |`analyse();`|shows error with the number of memory leaks in your code **(for the compiler develover :D)**||
 
-made by HUNAR OMAR in KURDISTAN  
+Made by HUNAR OMAR in KURDISTAN
 
 **Enjoy brainfucking faster than before :D**
 

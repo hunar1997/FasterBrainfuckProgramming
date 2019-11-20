@@ -667,7 +667,7 @@ void FBP::ifTrue(int condition){
 	this_if.temp0 = temp0;
 	this_if.temp1 = temp1;
 	if_list.push_back(this_if);
-cout << "moving";
+
 	movePointer(condition);
 	cout << "[";
 	movePointer(temp0);
