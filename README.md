@@ -24,6 +24,10 @@ There are only two important files (FBP.cpp and Functions.h) .. you write your p
 * 0.1:   
   - Now you can put nested if-statements
 
+# How to use
+* You can `cmake .` then `make`
+* Or just `g++ FBP.cpp``
+
 ## The availale commands are here  
 
 |Code|Description|Example|
@@ -44,7 +48,7 @@ There are only two important files (FBP.cpp and Functions.h) .. you write your p
 |`ifTrue(condition);`|used to create **if** statements and takes one **condition**, as discussed next. must be ended with `endIf();` | `ifTrue(SMALLER_OR_EQUAL(a,b));`|  
 |`elseIf();`|codes between this and `endIf();` will be called when ifTrue condition is false.| `elseIf();` |  
 |`endIf();`|used to end **if** statements and takes no arguments. | `endIf();` |
-|`COMPARE(a,b);`|Compares the two input variables and returns a `cmp_result` datatype which has `equal` `greator` `smaller`| `COMPARE(a,b).greater` returns memory location of greater, its one if a>b |
+|`COMPARE(a,b);`|Compares the two input variables and returns a `cmp_result` datatype which has `equal` `greator` `smaller`| `COMPARE(a,b).greater` returns memory location of greater, its 1 if a>b |
 |`EQUAL(a, b);`|used as input to **if** statements, takes two variables and return true if they are equal | `EQUAL(a,b);` where **a** and **b** were made using `newVariable()`|
 |`NOT_EQUAL(a, b);`|used as input to **if** statements, takes two variables and return true if they are not equal | `NOT_EQUAL(a,b);` where **a** and **b** were made using `newVariable()`|
 |`GREATER(a, b);`|used as input to **if** statements, takes two variables and return true if a is greater than b | `GREATER(a,b);` where **a** and **b** were made using `newVariable()`|
