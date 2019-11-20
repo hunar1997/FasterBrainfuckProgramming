@@ -26,7 +26,7 @@ There are only two important files (FBP.cpp and Functions.h) .. you write your p
 
 # How to use
 * You can `cmake .` then `make`
-* Or just `g++ FBP.cpp``
+* Or just `g++ FBP.cpp`
 
 ## The availale commands are here  
 
