@@ -1,21 +1,21 @@
 // Includes
-#pragma once
-
 #include <iostream>
 #include <cmath>
 #include <vector>
-// Includes
+// -----------------------------------------
 
 // Namespaces
 using namespace std;
-
+struct array;
+struct cmp_result;
 namespace FBP{
-	
 	void move(int from, int to);
 	void copy(int from, int to);
     int getCopy(int variable);
 	void addN(int location, int number);
 	void subN(int location, int number);
+    array newArray(int numItems);
+    array newArray(vector<int> items);
 	int newVariable();
 	int newVariable(int number);
 	void addV(int from, int to, int store);
@@ -26,37 +26,52 @@ namespace FBP{
 	void printV(int location);
 	void printC(char c);
 	void printS(string s);
-	
+
+    cmp_result COMPARE(int num1, int num2);
 	int EQUAL(int first_number, int second_number);
 	int NOT_EQUAL(int first_number, int second_number);
 	int GREATER(int first_number, int second_number);
 	int GREATER_OR_EQUAL(int first_number, int second_number);
 	int SMALLER(int first_number, int second_number);
 	int SMALLER_OR_EQUAL(int first_number, int second_number);
-	void ifTrue(int condition, bool keep_result);
+    void ifTrue(int condition);
 	void elseIf();
 	void endIf();
 }
-// Namespaces
+// -----------------------------------------
+void setup_the_memory();
+void movePointer(int location);
+
+int wereToGo();
+void use(int location);
+void free(int location);
+void resetVariable(int location);
+void deleteVariable(int location);
+void deleteArray(array a);
 
 // Defines
 #define tapeSize 30000
-// Defines
+#define nowhere -1
+// -----------------------------------------
 
 // Global Variables
 bool available[tapeSize]; // The locations on memory used to store variables
 int pointer = 0; // Pointer pointing to the current memory location
-// Global Variables
-
+// -----------------------------------------
 
 // The core functions
-
 void setup_the_memory() {
     for (int i = 0; i < tapeSize; i++) {
         available[i] = true; // make every single memory byte available
     }
 }
+void use(int location) {
+    available[location] = false;
+}
 
+void free(int location) {
+    available[location] = true;
+}
 void movePointer(int location) { // moves the pointer to #location
     if (location > pointer)
         for (int i = pointer; i < location; i++) { // if i need to go forward
@@ -72,23 +87,46 @@ void movePointer(int location) { // moves the pointer to #location
     }
 }
 
-int wereToGo() { // returns an empty location
-    for (int i = 0; i < tapeSize; i++) { // loop forward untill there is an available location
-        if (available[i]) {
-            return i;
-        }
+struct array{
+    int index;
+    int size;
+};
+array FBP::newArray(int numItems){
+    if (numItems==0){
+        cout << "\nError:\vYOU CANNOT REQUEST ZERO ITEMS\n";
+        return array{nowhere,nowhere};
     }
 
-    cout << "\nError: This error should never occur, it means that we used every location on the tape\n";
-    return false;
+    for (int i = 0; i < tapeSize; i++) { // loop forward untill there is an available location
+        if (available[i]) {
+            bool isTheOne = true;
+            for (int j=i; j<numItems+i; j++){
+                if (not available[j]){
+                    isTheOne = false;
+                    break;
+                }
+            }
+            if (isTheOne){
+                for (int k=i; k<numItems+i; k++){
+                    use(k);
+                }
+                return array {i, numItems};
+            }
+        }
+    }
+    cout << "\nError:\vThis error should never occur, it means that we used every location on the tape\n";
+    return array{nowhere,nowhere};
 }
-
-void use(int location) {
-	available[location] = false;
+array FBP::newArray(vector<int> items){
+    array a = newArray(items.size());
+    int i=0;
+    for (int v=a.index; v<a.index+a.size; v++){
+        addN(v, items[i++]);
+    }
+    return a;
 }
-
-void free(int location) {
-	available[location] = true;
+int wereToGo() { // returns an empty location
+    return FBP::newArray(1).index;
 }
 
 // reset variable to 0 but not delete it
@@ -96,12 +134,20 @@ void resetVariable(int location) {
     movePointer(location);
     cout << "[-]";
 }
+// -----------------------------------------
 
 // reset variable to 0 and delete it
 void deleteVariable(int location) {
 	movePointer(location);
 	free(location);
 	cout << "[-]";
+}
+
+void deleteArray(array a) {
+    movePointer(a.index);
+    for (int i=a.index; i<a.index+a.size; i++){
+        deleteVariable(i);
+    }
 }
 
 void FBP::move(int from, int to) {
@@ -116,7 +162,6 @@ void FBP::move(int from, int to) {
 
 void FBP::copy(int from, int to) {
     int temp = wereToGo();
-    use(temp);
 
     movePointer(to);
     cout << "[-]";
@@ -169,7 +214,6 @@ void FBP::addN(int location, int number) {
             if (n1 * n2 == absNumber - 1) tt = 1;
         }
         int temp1 = wereToGo();
-        use(temp1);
         movePointer(temp1);
         
         for (; n1 > 0; n1--) cout << "+";
@@ -197,14 +241,12 @@ void FBP::subN(int location, int number) {
 // returns a new available position and makes it unavailable to prevent overwrite
 int FBP::newVariable() {
     int place = wereToGo();
-    use(place);
     return place;
 }
 
 // same as above but it'll also assign it to #number
 int FBP::newVariable(int number) {
     int place = wereToGo();
-    use(place);
     movePointer(place);
     addN(place, number);
     return place;
@@ -447,245 +489,168 @@ void FBP::printC(char c) {
 
 // print a string
 void FBP::printS(string s) {
-	int SPACE = -1;
-	int NUMBER = -1;
-	int CAPITAL = -1;
-	int SMALL = -1;
-	int SMALL2 = -1;
-	int space=32, number=50, capital=80, small=100, small2=110;
-	
+    struct part{
+        bool skip=true;
+        int val;
+        int index=nowhere;
+    };
+    part parts[6] = {{true,32},{true,53},{true,72},{true,89},{true,103},{true,117}};
+
+//    int space=32;   // 32  => 47
+//    int number=53;  // 48  => 64
+//    int big1=72;    // 65  => 80
+//    int big2=89;    // 81  => 96
+//    int small1=103; // 97  => 110
+//    int small2=117; // 111 => 126
+
 	if (s.length()==1){
 		printC(s.at(0));
 		return;
 	}
-	
-	int tmp = newVariable();
-	int tmpVal = 0;
+
+
+    vector<int> memory;
 	for (int i=0; i<s.size(); i++){
 		char c = s.at(i);
 		
-		if (SPACE==-1 and c==32){
-			SPACE = newVariable();
-		}else if (NUMBER==-1 and c>=48 and c<=57){
-			NUMBER = newVariable();
-		}else if (CAPITAL==-1 and c>=65 and c<=90){
-			CAPITAL = newVariable();
-		}else if (SMALL==-1 and c>=97 and c<=122){
-			SMALL = newVariable();
-			SMALL2 = newVariable();
-		}
+        if (c>=32 and c<=47 and parts[0].skip){
+            parts[0].index=memory.size();
+            memory.push_back(parts[0].val);
+            parts[0].skip = false;
+        }else if (c>=48 and c<=64 and parts[1].skip){
+            parts[1].index=memory.size();
+            memory.push_back(parts[1].val);
+            parts[1].skip = false;
+        }else if (c>=65 and c<=80 and parts[2].skip){
+            parts[2].index=memory.size();
+            memory.push_back(parts[2].val);
+            parts[2].skip = false;
+        }else if (c>=81 and c<=96 and parts[3].skip){
+            parts[3].index=memory.size();
+            memory.push_back(parts[3].val);
+            parts[3].skip = false;
+        }else if (c>=97 and c<=110 and parts[4].skip){
+            parts[4].index=memory.size();
+            memory.push_back(parts[4].val);
+            parts[4].skip = false;
+        }else if (c>=111 and c<=126 and parts[5].skip){
+            parts[5].index=memory.size();
+            memory.push_back(parts[5].val);
+            parts[5].skip = false;
+        }
 	}
-	
-	movePointer(tmp);
-	cout << "++++++++++[";
-	if (SPACE != -1){
-		movePointer(SPACE);
-		cout << "+++";
-	}
-	if (NUMBER != -1){
-		movePointer(NUMBER);
-		cout << "+++++";
-	}
-	if (CAPITAL != -1){
-		movePointer(CAPITAL);
-		cout << "++++++++";
-	}
-	if (SMALL != -1){
-		movePointer(SMALL);
-		cout << "++++++++++";
-		movePointer(SMALL2);
-		cout << "+++++++++++";
-	}
-	movePointer(tmp);
-	cout << "-]";
-	if (SPACE != -1){
-		movePointer(SPACE);
-		cout << "++";
-	}
-	
+
+    array workingArea = newArray(memory);
+    for (int i=0; i<6;i++){
+        parts[i].index += workingArea.index;
+    }
+
 	for (int i=0; i<s.size(); i++){
 		char c = s.at(i);
-		
-		int *chosenOne=nullptr, *chosenVal=nullptr;
-		
-		if (c==32){
-			chosenOne = &SPACE;
-			chosenVal = &space;
-		}else if (c>=48 and c<=57){
-			chosenOne = &NUMBER;
-			chosenVal = &number;
-		}else if (c>=65 and c<=90){
-			chosenOne = &CAPITAL;
-			chosenVal = &capital;
-		}else if (c>=97 and c<=122){
-			if ( abs(c-small) <= abs(c-small2) ){
-				chosenOne = &SMALL;
-				chosenVal = &small;
-			}else{
-				chosenOne = &SMALL2;
-				chosenVal = &small2;
-			}
-		}else{
-			chosenOne = &tmp;
-			chosenVal = &tmpVal;
-		}
-		
-		if (c == *chosenVal){
-			movePointer(*chosenOne);
-			cout << ".";
-		}else if(*chosenVal < c){
-			int mag = c - *chosenVal;
-			*chosenVal += mag;
-			movePointer(*chosenOne);
-			for (int z=0; z<mag; z++) cout << "+";
-			cout << ".";
-		}else if(*chosenVal > c){
-			int mag = *chosenVal - c;
-			*chosenVal -= mag;
-			movePointer(*chosenOne);
-			for (int z=0; z<mag; z++) cout << "-";
-			cout << ".";
-		}
+
+        part *chosen_one;
+
+        if (c>=32 and c<=47){
+            chosen_one = &parts[0];
+        }else if (c>=48 and c<=64){
+            chosen_one = &parts[1];
+        }else if (c>=65 and c<=80){
+            chosen_one = &parts[2];
+        }else if (c>=81 and c<=96){
+            chosen_one = &parts[3];
+        }else if (c>=97 and c<=110){
+            chosen_one = &parts[4];
+        }else if (c>=111 and c<=126){
+            chosen_one = &parts[5];
+        }
+
+        if (c == chosen_one->val){
+            movePointer(chosen_one->index);
+        }else{
+            int mag = c - chosen_one->val;
+            chosen_one->val = c;
+            FBP::addN(chosen_one->index, mag);
+        }
+        cout << ".";
 	}
-	
-	if (SPACE != -1) deleteVariable(SPACE);
-	if (NUMBER != -1) deleteVariable(NUMBER);
-	if (CAPITAL != -1) deleteVariable(CAPITAL);
-	if (SMALL != -1){
-		deleteVariable(SMALL);
-		deleteVariable(SMALL2);
-	}
-	deleteVariable(tmp);
+    deleteArray(workingArea);
+}
+
+
+int priv_n1 = nowhere;
+int priv_n2 = nowhere;
+struct cmp_result{  // maybe in future, every pair has its own result saved
+    int equal = nowhere;
+    int greater = nowhere;
+    int smaller = nowhere;
+} priv_result;
+array priv_array;
+cmp_result FBP::COMPARE(int num1, int num2){
+    if ( num1==priv_n1 and num2==priv_n2 ){
+        priv_n1 = num1;
+        priv_n2 = num2;
+        // Not implemented yet thus just copy
+    }else{
+        deleteArray(priv_array);
+        priv_n1 = num1;
+        priv_n2 = num2;
+    }
+    priv_array = FBP::newArray(5);
+    int r1 = priv_array.index;  // r1 = n1 == n2
+    int r2 = r1+1;              // r2 = n1 > n2
+    int r3 = r2+1;              // r3 = n1 < n2
+    int n1 = r3+1;
+    int n2 = n1+1;
+    priv_result={r1,r2,r3};
+    FBP::copy(num1, n1);
+    FBP::copy(num2, n2);
+    movePointer(r1);
+    cout << "+[>>>>[-<]<<]<[->>+<]>>[<<<->+>>[-]]";    // dangerous two lines but necessary
+    pointer = n1;
+    return cmp_result{r1,r2,r3};
 }
 
 int FBP::EQUAL(int first_number, int second_number){
-	int result = FBP::getCopy(first_number);
-	int temp0 = newVariable();
-	int temp1 = newVariable();
-	
-	
-	movePointer(result);
-	cout << "[";
-	movePointer(temp1);
-	cout << "+";
-	movePointer(result);
-	cout << "-]+";
-	movePointer(second_number);
-	cout << "[";
-	movePointer(temp1);
-	cout << "-";
-	movePointer(temp0);
-	cout << "+";
-	movePointer(second_number);
-	cout << "-]";
-	movePointer(temp0);
-	cout << "[";
-	movePointer(second_number);
-	cout << "+";
-	movePointer(temp0);
-	cout << "-]";
-	movePointer(temp1);
-	cout << "[";
-	movePointer(result);
-	cout << "-";
-	deleteVariable(temp1);
-	cout << "]";
-	free(temp0);
-	return result;
+    return FBP::COMPARE(first_number, second_number).equal;
 }
 
 int FBP::NOT_EQUAL(int first_number, int second_number){
-	int result = getCopy(first_number);
+    int result = FBP::EQUAL(first_number, second_number);
 	int temp0 = newVariable();
-	int temp1 = newVariable();
-	
-	
-	movePointer(result);
-	cout << "[";
-	movePointer(temp1);
-	cout << "+";
-	movePointer(result);
-	cout << "-]";
-	movePointer(second_number);
-	cout << "[";
-	movePointer(temp1);
-	cout << "-";
-	movePointer(temp0);
-	cout << "+";
-	movePointer(second_number);
-	cout << "-]";
-	movePointer(temp0);
-	cout << "[";
-	movePointer(second_number);
-	cout << "+";
-	movePointer(temp0);
-	cout << "-]";
-	movePointer(temp1);
-	cout << "[";
-	movePointer(result);
-	cout << "+";
-	deleteVariable(temp1);
-	cout << "]";
+    movePointer(result);
+    cout << "[";
+    FBP::addN(temp0,1);
+    resetVariable(result);
+    cout << "]+";
+    movePointer(temp0);
+    cout << "[";
+    FBP::subN(result,1);
+    FBP::subN(temp0,1);
+    cout << "]";
 	free(temp0);
-	return result;
-}
-
-// I forgot what this function does :/
-int COMPARE(int first_number, int second_number, bool equal){
-	int temp0 = FBP::newVariable();
-	int temp1 = FBP::newVariable();
-	int result = FBP::newVariable();
-	int x = FBP::getCopy(first_number);
-	int y = FBP::getCopy(second_number);
-	movePointer(x);
-	if (equal) cout << "+";
-	cout << "[";
-	movePointer(temp0);
-	cout << "+";
-	movePointer(y);
-	cout << "[-";
-	resetVariable(temp0);
-	movePointer(temp1);
-	cout << "+";
-	movePointer(y);
-	cout << "]";
-	movePointer(temp0);
-	cout << "[-";
-	movePointer(result);
-	cout << "+";
-	movePointer(temp0);
-	cout << "]";
-	movePointer(temp1);
-	cout << "[-";
-	movePointer(y);
-	cout << "+";
-	movePointer(temp1);
-	cout << "]";
-	movePointer(y);
-	cout << "-";
-	movePointer(x);
-	cout << "-]";
-	free(temp0);
-	free(temp1);
-	free(x);
-	deleteVariable(y);
 	return result;
 }
 
 int FBP::GREATER(int first_number, int second_number){
-	return COMPARE(first_number, second_number, false);
+    return FBP::COMPARE(first_number, second_number).greater;
 }
 
 int FBP::GREATER_OR_EQUAL(int first_number, int second_number){
-	return COMPARE(first_number, second_number, true);;
+    FBP::addN(first_number, 1);
+    int result = FBP::GREATER(first_number, second_number);
+    FBP::subN(first_number, 1);
+    return result;
 }
 
 int FBP::SMALLER(int first_number, int second_number){
-	return COMPARE(second_number, first_number, false);
+    return FBP::COMPARE(first_number, second_number).smaller;
 }
 
 int FBP::SMALLER_OR_EQUAL(int first_number, int second_number){
-	return COMPARE(second_number, first_number, true);
+    FBP::subN(first_number, 1);
+    int result = FBP::SMALLER(first_number, second_number);
+    FBP::addN(first_number, 1);
+    return result;
 }
 
 struct if_data{
@@ -694,7 +659,7 @@ struct if_data{
 };
 vector<if_data> if_list;
 
-void FBP::ifTrue(int condition, bool keep_result=false){
+void FBP::ifTrue(int condition){
 	int temp0 = newVariable();
 	int temp1 = newVariable();
 	
@@ -702,7 +667,7 @@ void FBP::ifTrue(int condition, bool keep_result=false){
 	this_if.temp0 = temp0;
 	this_if.temp1 = temp1;
 	if_list.push_back(this_if);
-
+cout << "moving";
 	movePointer(condition);
 	cout << "[";
 	movePointer(temp0);
@@ -718,9 +683,7 @@ void FBP::ifTrue(int condition, bool keep_result=false){
 	movePointer(temp0);
 	cout << "-]+";
 	movePointer(temp1);
-	cout << "[";
-	if (!keep_result)
-		deleteVariable(condition);
+    cout << "[";
 }
 void FBP::elseIf(){
 	int temp0 = if_list.back().temp0;
