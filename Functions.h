@@ -18,6 +18,9 @@ namespace FBP{
     array newArray(vector<int> items);
 	int newVariable();
 	int newVariable(int number);
+    void setVariable(int variable, int value);
+    void resetVariable(int location);
+
 	void addV(int from, int to, int store);
 	void subV(int from, int to);
 	void mulV(int from, int to);
@@ -34,9 +37,14 @@ namespace FBP{
 	int GREATER_OR_EQUAL(int first_number, int second_number);
 	int SMALLER(int first_number, int second_number);
 	int SMALLER_OR_EQUAL(int first_number, int second_number);
+
     void ifTrue(int condition);
 	void elseIf();
-	void endIf();
+    void endIf();
+
+    void loop();
+    void endLoop();
+    void breakLoop();
 }
 // -----------------------------------------
 void setup_the_memory();
@@ -45,7 +53,7 @@ void movePointer(int location);
 int wereToGo();
 void use(int location);
 void free(int location);
-void resetVariable(int location);
+
 void deleteVariable(int location);
 void deleteArray(array a);
 
@@ -57,6 +65,7 @@ void deleteArray(array a);
 // Global Variables
 bool available[tapeSize]; // The locations on memory used to store variables
 int pointer = 0; // Pointer pointing to the current memory location
+
 // -----------------------------------------
 
 // The core functions
@@ -130,7 +139,7 @@ int wereToGo() { // returns an empty location
 }
 
 // reset variable to 0 but not delete it
-void resetVariable(int location) {
+void FBP::resetVariable(int location) {
     movePointer(location);
     cout << "[-]";
 }
@@ -246,10 +255,17 @@ int FBP::newVariable() {
 
 // same as above but it'll also assign it to #number
 int FBP::newVariable(int number) {
+    if (number==0) return newVariable();
     int place = wereToGo();
     movePointer(place);
     addN(place, number);
     return place;
+}
+
+// set a variable to a value by resetting it then adding the value
+void FBP::setVariable(int variable, int value){
+    resetVariable(variable);
+    addN(variable,value);
 }
 
 void FBP::addV(int from, int to, int store) {
@@ -586,16 +602,10 @@ struct cmp_result{  // maybe in future, every pair has its own result saved
 } priv_result;
 array priv_array;
 cmp_result FBP::COMPARE(int num1, int num2){
-    if ( num1==priv_n1 and num2==priv_n2 ){
-        priv_n1 = num1;
-        priv_n2 = num2;
-        // Not implemented yet thus just copy
-    }else{
-        deleteArray(priv_array);
-        priv_n1 = num1;
-        priv_n2 = num2;
-    }
+    deleteArray(priv_array);
+
     priv_array = FBP::newArray(5);
+    cout << "allocated 5 from " << priv_array.index;
     int r1 = priv_array.index;  // r1 = n1 == n2
     int r2 = r1+1;              // r2 = n1 > n2
     int r3 = r2+1;              // r3 = n1 < n2
@@ -653,9 +663,11 @@ int FBP::SMALLER_OR_EQUAL(int first_number, int second_number){
     return result;
 }
 
+
 struct if_data{
-	int temp0;
-	int temp1;
+    int temp0;
+    int temp1;
+    bool elseExists=false;
 };
 vector<if_data> if_list;
 
@@ -686,6 +698,7 @@ void FBP::ifTrue(int condition){
     cout << "[";
 }
 void FBP::elseIf(){
+    if_list.back().elseExists=true;
 	int temp0 = if_list.back().temp0;
 	int temp1 = if_list.back().temp1;
 	movePointer(temp0);
@@ -696,25 +709,52 @@ void FBP::elseIf(){
 	cout << "[";
 }
 void FBP::endIf(){
+if (not if_list.back().elseExists) elseIf();
 	int temp0 = if_list.back().temp0;
 	int temp1 = if_list.back().temp1;
 	movePointer(temp0);
 	cout << "-]";
 	deleteVariable(temp0);
 	deleteVariable(temp1);
-	if_list.pop_back();
+    if_list.pop_back();
 }
 
+
+vector<int> while_data;
+void FBP::loop(){
+    int cond = newVariable(1);
+    cout << "cond" << cond;
+    while_data.push_back(cond);
+    movePointer(cond);
+    cout << "[";
+}
+
+void FBP::endLoop(){
+    movePointer(while_data.back());
+    cout << "checking";
+    cout << "]";
+    while_data.pop_back();
+}
+
+void FBP::breakLoop(){
+    resetVariable(while_data.back());
+}
+
+
 void analyse() {
-    int ml = 0;
+    vector<int> leaks;
     for (int i = 0; i < tapeSize; i++) {
         if (available[i] == false) {
-            ml++;
+            leaks.push_back(i);
         }
     }
-    if (ml > 0) {
-        cout << endl << "Memory Leak Detected: " << ml << " memory not freed" << endl;
+    if (leaks.size() > 0) {
+        cout << endl << "Memory Leak Detected: " << leaks.size() << " memory not freed" << endl;
     }
+    for (int i=0; i<leaks.size(); i++){
+        cout << leaks[i] << " ";
+    }
+    cout << endl;
 }
 // The core functions
 
