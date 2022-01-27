@@ -1,5 +1,5 @@
 # Faster Brainfuck Programming FBP
-# Version 0.2
+# Version 0.3
 This project aims to make programming the brainfuck language easier, faster and more powerful ..  everything is made out of functions making it very easy to port to other languages 
 
 I made this using c++ but i used things that exist in every singe language 
