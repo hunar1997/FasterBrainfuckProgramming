@@ -10,10 +10,12 @@ There are only two important files (FBP.cpp and Functions.h) .. you write your p
 
 [Brainfuck Algorithms](https://esolangs.org/wiki/Brainfuck_algorithms)
  
-[Brainfuck Visualizer](https://fatiherikli.github.io/brainfuck-visualizer/)  
+[Brainfuck Visualizer](https://fatiherikli.github.io/brainfuck-visualizer/)  no longer online :(   
 [Brainfuck IDE](https://minond.xyz/brainfuck/) 
 
 ## What's new!!
+* 0.3:
+  - Added looping :) finally had some time to work on this project
 * 0.2:
   - Improved the printS function
   - Added `newArray` function, along with `array` datatype
@@ -37,6 +39,7 @@ There are only two important files (FBP.cpp and Functions.h) .. you write your p
 |`addV(from, to);`|adds two variables together .. the result will be stored in **to** keeping the original value of **from** as it is|`addV(a, b);`   adds **a** and **b** together and storing the result in **b**|
 |`mulV(from, to);`|same as addV but multiply||
 |`divV(x, y);`|divide **x** by **y** and store the result in **x**  so it's like **(x=x/y)**  ||
+|`subN(location, number);`|same as using addN and passing negative **number**||
 |`subV(from, to);`|subtracts **from** from **to** and putts the result in **to** .. so **2-1** will be `subV(1, 2);` the **1** will be lost||
 |`move(from, to);`|moves the value from **from** to **to** by resetting the value of **to** to **0** and moving the value of **from** to **to** .. and finally the value of **from** will be **0**||
 |`copy(from, to);`|same as move but the value of **from** is not resetted to **0**||
@@ -55,6 +58,9 @@ There are only two important files (FBP.cpp and Functions.h) .. you write your p
 |`GREATER_OR_EQUAL(a, b);`|used as input to **if** statements, takes two variables and return true if a is greater than or equal to b | `GREATER_OR_EQUAL(a,b);` where **a** and **b** were made using `newVariable()`|
 |`SMALLER(a, b);`|used as input to **if** statements, takes two variables and return true if a is smaller than b | `SMALLER(a,b);` where **a** and **b** were made using `newVariable()`|
 |`SMALLER_OR_EQUAL(a, b);`|used as input to **if** statements, takes two variables and return true if a is smaller than or equal to b | `SMALLER_OR_EQUAL(a,b);` where **a** and **b** were made using `newVariable()`|
+|`loop();`|starts running any code between it and `endLoop();` unless `lastLoop();` was called which makes that loop the last loop||
+|`endLoop();`|marks the end of the `loop();`||
+|`lastLoop();`|makes the current iteration in the loop the last iteration||
 |`resetVariable(location);`|resets the variable to **0**, (without freeing it)||
 |`deleteVariable(location);`|resets the variable to **0**, and frees it||
 |`movePointer(location);`|moves the poiter to **location** variable by using **>** and **<**||

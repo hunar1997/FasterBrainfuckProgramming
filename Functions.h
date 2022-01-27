@@ -44,7 +44,7 @@ namespace FBP{
 
     void loop();
     void endLoop();
-    void breakLoop();
+    void lastLoop();
 }
 // -----------------------------------------
 void setup_the_memory();
@@ -602,10 +602,7 @@ struct cmp_result{  // maybe in future, every pair has its own result saved
 } priv_result;
 array priv_array;
 cmp_result FBP::COMPARE(int num1, int num2){
-    deleteArray(priv_array);
-
     priv_array = FBP::newArray(5);
-    cout << "allocated 5 from " << priv_array.index;
     int r1 = priv_array.index;  // r1 = n1 == n2
     int r2 = r1+1;              // r2 = n1 > n2
     int r3 = r2+1;              // r3 = n1 < n2
@@ -694,8 +691,9 @@ void FBP::ifTrue(int condition){
 	cout << "+";
 	movePointer(temp0);
 	cout << "-]+";
+   deleteArray(priv_array);
 	movePointer(temp1);
-    cout << "[";
+   cout << "[";
 }
 void FBP::elseIf(){
     if_list.back().elseExists=true;
@@ -723,7 +721,6 @@ if (not if_list.back().elseExists) elseIf();
 vector<int> while_data;
 void FBP::loop(){
     int cond = newVariable(1);
-    cout << "cond" << cond;
     while_data.push_back(cond);
     movePointer(cond);
     cout << "[";
@@ -731,12 +728,12 @@ void FBP::loop(){
 
 void FBP::endLoop(){
     movePointer(while_data.back());
-    cout << "checking";
     cout << "]";
+    free(while_data.back());
     while_data.pop_back();
 }
 
-void FBP::breakLoop(){
+void FBP::lastLoop(){
     resetVariable(while_data.back());
 }
 
@@ -749,7 +746,7 @@ void analyse() {
         }
     }
     if (leaks.size() > 0) {
-        cout << endl << "Memory Leak Detected: " << leaks.size() << " memory not freed" << endl;
+        cout << endl << "Memory Leak Detected: " << leaks.size() << " memory not freed.\nhere are the locations:\v";
     }
     for (int i=0; i<leaks.size(); i++){
         cout << leaks[i] << " ";

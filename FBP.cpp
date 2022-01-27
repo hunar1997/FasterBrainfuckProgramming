@@ -9,25 +9,16 @@ int main() {
 	using namespace FBP;
 
 
-    int a = newVariable(3);
+    int a = newVariable(1);
     int z = newVariable(3);
 
     loop();
         printC('T');
         ifTrue(EQUAL(a,z));
-            breakLoop();
-            cout << "check";
+            lastLoop();
         endIf();
+        addN(a,1);
     endLoop();
-    /*
-    PLEASE READ
-    I finally figure out that you shouldn't free memory in loop because
-    you use it in the next iteration, so I have to change the entire prject
-    so the user pre allocates memory at the start then assigns them to functions
-    that need variabels. However it's terrible for the syntax since they need to pass
-    temporaries as well :(
-    I have an idea, detect if inside function, then dont free them :)
-    */
 
     deleteVariable(a);
     deleteVariable(z);
@@ -47,8 +38,6 @@ int main() {
 
  make #isZero array to contain the zero values and prevent [-]
  use a consistent format in naming functions
-
- fix the 5 memory issues by making a freeComparison() function
 
  dont delete the memory for print and reuse it, make freeStrings() at end
 
