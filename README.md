@@ -20,7 +20,7 @@ There are only two important files (FBP.cpp and Functions.h) .. you write your p
   - Improved the printS function
   - Added `newArray` function, along with `array` datatype
   - Used the [new comparison algorithm](https://www.reddit.com/r/brainfuck/comments/d0huag/what_is_the_best_way_to_compare_two_numbers) (by reddit user danielcristofani)
-  - Overall improvements made the number of steps to run the main program (in FBP.cpp) reduce from 68093 to 6533
+  - Overall improvements made the number of steps to run the main program (in Examples/if_else.cpp) reduce from 68093 to 6533
   - The new `COMPARE` function creates an array that results in 5 memory leaks (more bugs to fix later)
 
 * 0.1:   
@@ -64,7 +64,7 @@ There are only two important files (FBP.cpp and Functions.h) .. you write your p
 |`resetVariable(location);`|resets the variable to **0**, (without freeing it)||
 |`deleteVariable(location);`|resets the variable to **0**, and frees it||
 |`movePointer(location);`|moves the poiter to **location** variable by using **>** and **<**||
-|`newArray();`|Creates a continuous list of variables and `use()`es them, then returns an `array` datatype which has `index` and `size`|`newArray(3)` or `newArray({1,2,3})`|
+|`newArray(numItems);`|Creates a continuous list of variables and `use()`es them, then returns an `array` datatype which has `index` and `size`|`newArray(3)` or `newArray({1,2,3})`|
 |`wereToGo();`|Returns newArray(1).index||
 |`use(location);`|marks a location on memory as **used**||
 |`free(location);`|marks a location on memory as **free**||
